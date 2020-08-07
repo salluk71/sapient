@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-
+import Spacex from './Spacex';
 export default class App extends Component {
 
    launch_success = '';
@@ -30,12 +30,12 @@ export default class App extends Component {
    }
 
 
-   filterData(e , key , value){    
-      console.log(key , value)
+   filterData(e , key , value){         
       this.setState({
          data:null,
          isLoaded:false,  
-         notFound:true            
+         notFound:true
+            
       })
       var param = '?limit=100';
 
@@ -203,53 +203,16 @@ export default class App extends Component {
                         </li>
                         <li>
                            <div>
-                              <input type="radio"  onClick={ ()=> {this.filterData(this, 'land_success', false)}} name="landing" id="landing-false" />
+                              <input type="radio"  onClick={ ()=> {this.filterData(this, 'land_success', '')}} name="landing" id="landing-false" />
                               <label htmlFor="landing-false"> False </label>                                 
                            </div>
                         </li>                        
                      </ul>
                   </div>
                </div>
-               <div className="content-list">
-                  {
-                  (this.state.isLoaded) ?
-                  this.state.notFound=== false ?
-                     this.state.data.map((data , i) => 
-                           <div className="spaceBox" key={i}>
-                           <figure>
-                              <img src={data.links.mission_patch} alt={data.mission_name} />                        
-                           </figure>
-                           <h3>{data.mission_name}</h3>
-                           <ul>
-                              <li>Mission IDS:
-                                 {data.mission_id? 
-                                 <ul className="mission_id_list">{
-                                    data.mission_id.map((mission_id , id_i)=> 
-                                       <li key={id_i} >{mission_id }</li>
-                                    )
-                                 }
-                                 </ul>
-                                 :
-                                 ''   
-                              }
-                              </li>
-                              <li>Launch Year: <span> {data.launch_year} </span> </li>
-                              <li>Successful Launch:  <span> {data.launch_success? 'True' : 'False' } </span> </li>
-                              <li>Successful Landing: <span> {data.rocket.first_stage.cores[0].land_success === null || data.rocket.first_stage.cores[0].land_success === false? 'False' :'True'}</span> </li>
-                           </ul>
-                        </div>
-
-                     )
-                     :
-                     <div >not found </div>
-                 
-                  :                             
-                     <div>Please Wait...</div>
-                  }
-               </div>
-            </div>
-               
-            <span className="developed-by"><strong>Developed By:</strong> Salman Khan</span>
+               <Spacex state={this.state} />
+            </div>                  
+            <span></span>
          </main>
          </>
       )
