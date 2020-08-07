@@ -249,6 +249,8 @@ export default class App extends Component {
                   }
                </div>
             </div>
+               
+            <span className="developed-by"><strong>Developed By:</strong> Salman Khan</span>
          </main>
          </>
       )
