@@ -9,7 +9,8 @@ export default class App extends Component {
       super();
       this.state = {
          data:null,
-         isLoaded:false,        
+         isLoaded:false,     
+         notFound:true      
       }
    }
 
@@ -21,7 +22,8 @@ export default class App extends Component {
             response.json().then(result => {              
             this.setState({
                data:result,
-               isLoaded:true
+               isLoaded:true,
+               notFound:false   
             })  
          })
       })
@@ -31,27 +33,38 @@ export default class App extends Component {
    filterData(e , key , value){    
       this.setState({
          data:null,
-         isLoaded:false,        
+         isLoaded:false,  
+         notFound:true
+            
       })
-     
+      var param = '?limit=100';
       if(key === 'launch_year' ){
          this.launch_year = `&${key}=${value}`
       }else  if(key === 'landing_success' ){
          this.landing_success = `&${key}=${value}`          
       }else  if(key === 'launch_success' ){
          this.launch_success = `&${key}=${value}`         
-      }
-
-      const param = '?limit=100'+this.launch_year + this.landing_success + this.launch_success;    
+      }            
+      param += this.launch_year + this.landing_success + this.launch_success;    
+      
       const  url = 'https://api.spaceXdata.com/v3/launches'+ param;            
       fetch(url , {
          method : 'GET'
          }).then(response => {
-            response.json().then(result => {              
-            this.setState({
-               data:result,
-               isLoaded:true
-            })  
+            response.json().then(result => { 
+               if(result.length >0){
+                  this.setState({
+                     data:result,
+                     isLoaded:true,
+                     notFound:false
+                  })  
+               }else{
+                  this.setState({
+                     notFound:true,
+                     isLoaded:true
+                  })  
+               }         
+               
          })
       })
    }
@@ -197,36 +210,39 @@ export default class App extends Component {
                </div>
                <div className="content-list">
                   {
-                  this.state.isLoaded?
-                  this.state.data.map((data , i) => 
-                        <div className="spaceBox" key={i}>
-                        <figure>
-                           <img src={data.links.mission_patch} alt={data.mission_name} />                        
-                        </figure>
-                        <h3>{data.mission_name}</h3>
-                        <ul>
-                           <li>Mission IDS:
-                              {data.mission_id? 
-                              <ul className="mission_id_list">{
-                                 data.mission_id.map((mission_id , id_i)=> 
-                                    <li key={id_i} >{mission_id }</li>
-                                 )
+                  (this.state.isLoaded) ?
+                  this.state.notFound== false ?
+                     this.state.data.map((data , i) => 
+                           <div className="spaceBox" key={i}>
+                           <figure>
+                              <img src={data.links.mission_patch} alt={data.mission_name} />                        
+                           </figure>
+                           <h3>{data.mission_name}</h3>
+                           <ul>
+                              <li>Mission IDS:
+                                 {data.mission_id? 
+                                 <ul className="mission_id_list">{
+                                    data.mission_id.map((mission_id , id_i)=> 
+                                       <li key={id_i} >{mission_id }</li>
+                                    )
+                                 }
+                                 </ul>
+                                 :
+                                 ''   
                               }
-                              </ul>
-                              :
-                              ''   
-                           }
-                           </li>
-                           <li>Launch Year: <span> {data.launch_year} </span> </li>
-                           <li>Successful Launch:  <span> {data.launch_success? 'True' : 'False' } </span> </li>
-                           <li>Successful Landing: <span> {data.rocket.first_stage.cores[0].land_success? 'True' :'False'}</span> </li>
-                        </ul>
-                     </div>
+                              </li>
+                              <li>Launch Year: <span> {data.launch_year} </span> </li>
+                              <li>Successful Launch:  <span> {data.launch_success? 'True' : 'False' } </span> </li>
+                              <li>Successful Landing: <span> {data.rocket.first_stage.cores[0].land_success? 'True' :'False'}</span> </li>
+                           </ul>
+                        </div>
 
-                  )
+                     )
+                     :
+                     <div >not found </div>
                  
-                  :
-                  <div>Please Wait...</div>
+                  :                             
+                     <div>Please Wait...</div>
                   }
                </div>
             </div>
