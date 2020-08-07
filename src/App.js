@@ -35,8 +35,7 @@ export default class App extends Component {
       this.setState({
          data:null,
          isLoaded:false,  
-         notFound:true
-            
+         notFound:true            
       })
       var param = '?limit=100';
 
@@ -214,7 +213,7 @@ export default class App extends Component {
                <div className="content-list">
                   {
                   (this.state.isLoaded) ?
-                  this.state.notFound== false ?
+                  this.state.notFound=== false ?
                      this.state.data.map((data , i) => 
                            <div className="spaceBox" key={i}>
                            <figure>
@@ -236,7 +235,7 @@ export default class App extends Component {
                               </li>
                               <li>Launch Year: <span> {data.launch_year} </span> </li>
                               <li>Successful Launch:  <span> {data.launch_success? 'True' : 'False' } </span> </li>
-                              <li>Successful Landing: <span> {data.rocket.first_stage.cores[0].land_success == null || data.rocket.first_stage.cores[0].land_success == false? 'False' :'True'}</span> </li>
+                              <li>Successful Landing: <span> {data.rocket.first_stage.cores[0].land_success === null || data.rocket.first_stage.cores[0].land_success === false? 'False' :'True'}</span> </li>
                            </ul>
                         </div>
 
