@@ -2,9 +2,9 @@ import React, { Component } from 'react'
 
 export default class App extends Component {
 
-    launch_success = '';
-    landing_success = '';
-    launch_year = '';
+   launch_success = '';
+   landing_success = '';
+   launch_year = '';
    constructor(){
       super();
       this.state = {
@@ -31,6 +31,7 @@ export default class App extends Component {
 
 
    filterData(e , key , value){    
+      console.log(key , value)
       this.setState({
          data:null,
          isLoaded:false,  
@@ -38,13 +39,15 @@ export default class App extends Component {
             
       })
       var param = '?limit=100';
+
       if(key === 'launch_year' ){
          this.launch_year = `&${key}=${value}`
-      }else  if(key === 'landing_success' ){
+      }else  if(key === 'land_success' ){
          this.landing_success = `&${key}=${value}`          
       }else  if(key === 'launch_success' ){
          this.launch_success = `&${key}=${value}`         
-      }            
+      }        
+
       param += this.launch_year + this.landing_success + this.launch_success;    
       
       const  url = 'https://api.spaceXdata.com/v3/launches'+ param;            
@@ -195,13 +198,13 @@ export default class App extends Component {
                      <ul>
                         <li>
                            <div>
-                              <input type="radio"  onClick={ ()=> {this.filterData(this, 'landing_success' , true)}}  name="landing" id="landing-true" />
+                              <input type="radio"  onClick={ ()=> {this.filterData(this, 'land_success' , true)}}  name="landing" id="landing-true" />
                               <label htmlFor="landing-true"> True </label>                                 
                            </div>
                         </li>
                         <li>
                            <div>
-                              <input type="radio"  onClick={ ()=> {this.filterData(this, 'landing_success', false)}} name="landing" id="landing-false" />
+                              <input type="radio"  onClick={ ()=> {this.filterData(this, 'land_success', false)}} name="landing" id="landing-false" />
                               <label htmlFor="landing-false"> False </label>                                 
                            </div>
                         </li>                        
@@ -233,7 +236,7 @@ export default class App extends Component {
                               </li>
                               <li>Launch Year: <span> {data.launch_year} </span> </li>
                               <li>Successful Launch:  <span> {data.launch_success? 'True' : 'False' } </span> </li>
-                              <li>Successful Landing: <span> {data.rocket.first_stage.cores[0].land_success? 'True' :'False'}</span> </li>
+                              <li>Successful Landing: <span> {data.rocket.first_stage.cores[0].land_success == null || data.rocket.first_stage.cores[0].land_success == false? 'False' :'True'}</span> </li>
                            </ul>
                         </div>
 
